@@ -5,6 +5,25 @@
 #        4. Día mes y año mostradas en pantalla con el formato dia-mes-año
 #        5. Cambiar a mayúsculas los nombres de los ficheros pasados por parámetros.
 #!/bin/bash
+usuariosConectados(){
+    echo "Usuarios conectados: $(who | wc -l)"
+}
+listarYAlmacenar(){
+    echo "Usuarios en /home: $(ls /home)"
+    ls /home > all.users.txt
+    echo $(cat all.users.txt)
+}
+usuariosOrdenados(){
+    echo "Usuarios ordenados por nombre: $(cat /etc/passwd | cut -d: -f1,3 | sort -t: -k1)"
+    echo "------------------------------"
+    echo "Usuarios ordenados por id: $(cat /etc/passwd | cut -d: -f1,3 | sort -t: -k2 -n)"
+}
+fecha(){
+    echo "Fecha: $(date +"%d-%m-%Y")"
+}
+nombresMayusculas(){
+    echo "Pasar a mayúsculas"
+}
 menu(){
     echo "----Menú----"
     echo "1. Listar usuarios conectados."
@@ -14,32 +33,33 @@ menu(){
     echo "5. Cambiar a mayúsculas los nombres de los ficheros pasados por parámetros."
     echo "6. Salir."
     echo "Seleccione una opción: "
+}
+while true; do
+    menu
     read opcion
-}
-case "${opcion}" in
-    1)
-        usuariosConectados
-        ;;
-    2)
-       
-        ;;
-    3)
-        echo "item = 3"
-        ;;
-    4)
-        echo "item = 4"
-        ;;
-    5)
-        echo "item = 5"
-        ;;
-    6)
-        echo "item = 6"
-        ;;
-    *)
-        echo "default (none of above)"
-        ;;
-esac
-
-usuariosConectados(){
-    echo "Usuarios conectados: $(who | wc -l)"
-}
+    case $opcion in
+        1)
+            usuariosConectados
+            ;;
+        2)
+            listarYAlmacenar
+            ;;
+        3)
+            usuariosOrdenados
+            ;;
+        4)
+            fecha
+            ;;
+        5)
+            nombresMayusculas $@
+            ;;
+        6)
+            echo Saliendo..
+            exit
+            ;;
+        *)
+            echo Error. Opción no válida.
+            exit
+            ;;
+    esac
+done
